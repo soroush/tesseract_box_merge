@@ -49,7 +49,8 @@ make install
 ```
 ## Contributors
 
-Please report bugs, and suggest improvements in [issues](/issues).
+Please report bugs, and suggest improvements in 
+[issues](https://github.com/soroush/tesseract_box_merge/issues) section. 
 
 In case you wish to contribute to this project, please send an email to
 soroush@ametisco.ir.
