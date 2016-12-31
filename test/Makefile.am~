@@ -1,0 +1,8 @@
+check_PROGRAMS = \
+	strtok_l
+
+strtok_l_SOURCES = \
+	strtok_l.c \
+	../src/unicode-utils.c
+
+TESTS = $(check_PROGRAMS)
