@@ -9,6 +9,7 @@ AM_SILENT_RULES([yes])
 
 # Checks for programs.
 AC_PROG_CC
+AC_PROG_OBJCOPY
 
 # Checks for libraries.
 
@@ -24,5 +25,6 @@ AC_FUNC_MALLOC
 AC_CHECK_FUNCS([strdup strtoul])
 
 AC_CONFIG_FILES([Makefile
-                 src/Makefile])
+                 src/Makefile
+                 test/Makefile])
 AC_OUTPUT

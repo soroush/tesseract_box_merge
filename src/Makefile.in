@@ -14,6 +14,21 @@
 
 @SET_MAKE@
 
+# This file is part of boxmerge.
+#
+# boxmerge is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# boxmerge is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with boxmerge.  If not, see <http://www.gnu.org/licenses/>.
+
 VPATH = @srcdir@
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -86,7 +101,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS = box_merge$(EXEEXT)
+bin_PROGRAMS = merge_boxes$(EXEEXT) extract_ligatures$(EXEEXT)
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -99,11 +114,18 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_box_merge_OBJECTS = common.$(OBJEXT) stack.$(OBJEXT) \
-	char-tree.$(OBJEXT) ucd-parse.$(OBJEXT) box-parse.$(OBJEXT) \
-	box-merge.$(OBJEXT) main.$(OBJEXT)
-box_merge_OBJECTS = $(am_box_merge_OBJECTS)
-box_merge_LDADD = $(LDADD)
+am_extract_ligatures_OBJECTS = common.$(OBJEXT) char-tree.$(OBJEXT) \
+	unicode-utils.$(OBJEXT) ucd-parse.$(OBJEXT) \
+	ligature-list.$(OBJEXT) ligature-extract.$(OBJEXT) \
+	embedded-ucd.$(OBJEXT) main-extract-ligatures.$(OBJEXT)
+extract_ligatures_OBJECTS = $(am_extract_ligatures_OBJECTS)
+extract_ligatures_LDADD = $(LDADD)
+am_merge_boxes_OBJECTS = common.$(OBJEXT) stack.$(OBJEXT) \
+	char-tree.$(OBJEXT) unicode-utils.$(OBJEXT) \
+	ucd-parse.$(OBJEXT) box-parse.$(OBJEXT) box-merge.$(OBJEXT) \
+	embedded-ucd.$(OBJEXT) main-merge-boxes.$(OBJEXT)
+merge_boxes_OBJECTS = $(am_merge_boxes_OBJECTS)
+merge_boxes_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -132,8 +154,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(box_merge_SOURCES)
-DIST_SOURCES = $(box_merge_SOURCES)
+SOURCES = $(extract_ligatures_SOURCES) $(merge_boxes_SOURCES)
+DIST_SOURCES = $(extract_ligatures_SOURCES) $(merge_boxes_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -247,20 +269,39 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-box_merge_SOURCES = \
+merge_boxes_SOURCES = \
     common.h \
     common.c \
     stack.h \
     stack.c \
     char-tree.h \
     char-tree.c \
+    unicode-utils.h \
+    unicode-utils.c \
     ucd-parse.h \
     ucd-parse.c \
     box-parse.h \
     box-parse.c \
     box-merge.h \
     box-merge.c \
-    main.c
+    embedded-ucd.c \
+    main-merge-boxes.c
+
+extract_ligatures_SOURCES = \
+    common.h \
+    common.c \
+    char-tree.h \
+    char-tree.c \
+    unicode-utils.h \
+    unicode-utils.c \
+    ucd-parse.h \
+    ucd-parse.c \
+    ligature-list.h \
+    ligature-list.c \
+    ligature-extract.h \
+    ligature-extract.c \
+    embedded-ucd.c \
+    main-extract-ligatures.c
 
 all: all-am
 
@@ -338,9 +379,13 @@ uninstall-binPROGRAMS:
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
 
-box_merge$(EXEEXT): $(box_merge_OBJECTS) $(box_merge_DEPENDENCIES) $(EXTRA_box_merge_DEPENDENCIES) 
-	@rm -f box_merge$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(box_merge_OBJECTS) $(box_merge_LDADD) $(LIBS)
+extract_ligatures$(EXEEXT): $(extract_ligatures_OBJECTS) $(extract_ligatures_DEPENDENCIES) $(EXTRA_extract_ligatures_DEPENDENCIES) 
+	@rm -f extract_ligatures$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(extract_ligatures_OBJECTS) $(extract_ligatures_LDADD) $(LIBS)
+
+merge_boxes$(EXEEXT): $(merge_boxes_OBJECTS) $(merge_boxes_DEPENDENCIES) $(EXTRA_merge_boxes_DEPENDENCIES) 
+	@rm -f merge_boxes$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(merge_boxes_OBJECTS) $(merge_boxes_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -352,9 +397,14 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/box-parse.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/char-tree.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/embedded-ucd.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ligature-extract.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ligature-list.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main-extract-ligatures.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main-merge-boxes.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stack.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ucd-parse.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/unicode-utils.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

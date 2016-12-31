@@ -161,12 +161,12 @@ void avl_insert(char_tree_t* tree, char_info_t* info) {
     char_info_t* last = NULL;
 
     /* Check if there is a tree */
-    if(tree==NULL){
+    if(tree==NULL) {
         return;
     }
 
     /* Check if inserting node is valid */
-    if(info==NULL){
+    if(info==NULL) {
         return;
     }
 
@@ -206,4 +206,12 @@ char_info_t* avl_find(char_tree_t* tree, int codepoint) {
         }
     }
     return current;
+}
+
+void initialize_global_tree() {
+    if(!global_char_info) {
+        global_char_info = avl_create_tree();
+    } else {
+        /* TODO: Destroy previous tree, make a new one. */
+    }
 }

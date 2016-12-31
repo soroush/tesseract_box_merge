@@ -13,18 +13,40 @@
 # You should have received a copy of the GNU General Public License
 # along with boxmerge.  If not, see <http://www.gnu.org/licenses/>.
 
-bin_PROGRAMS = box_merge
-box_merge_SOURCES = \
+bin_PROGRAMS = \
+    merge_boxes \
+    extract_ligatures
+
+merge_boxes_SOURCES = \
     common.h \
     common.c \
     stack.h \
     stack.c \
     char-tree.h \
     char-tree.c \
+    unicode-utils.h \
+    unicode-utils.c \
     ucd-parse.h \
     ucd-parse.c \
     box-parse.h \
     box-parse.c \
     box-merge.h \
     box-merge.c \
-    main.c
+    embedded-ucd.c \
+    main-merge-boxes.c
+
+extract_ligatures_SOURCES = \
+    common.h \
+    common.c \
+    char-tree.h \
+    char-tree.c \
+    unicode-utils.h \
+    unicode-utils.c \
+    ucd-parse.h \
+    ucd-parse.c \
+    ligature-list.h \
+    ligature-list.c \
+    ligature-extract.h \
+    ligature-extract.c \
+    embedded-ucd.c \
+    main-extract-ligatures.c

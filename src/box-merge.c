@@ -15,22 +15,12 @@
  * along with boxmerge.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "box-merge.h"
-#include "stack.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
-#define MAX(x, y) (((x) > (y)) ? (x) : (y))
-#define MIN(x, y) (((x) < (y)) ? (x) : (y))
-
-static const int dfa[][3] = {
-    /* Initial, Final, Undefined  */
-    {1        , 2    , 3}, /* 0 = Start     */
-    {1        , 2    , 3}, /* 1 = Initial   */
-    {1        , 2    , 3}, /* 2 = Final     */
-    {1        , 2    , 3}  /* 3 = Undefined */
-};
+#include "box-merge.h"
+#include "stack.h"
+#include "unicode-utils.h"
 
 /* Concat two strings */
 char* concat(const char* s1, const char* s2) {
@@ -81,7 +71,8 @@ static void expand_box(box_data_t* current, box_data_t* new_box, int current_cou
     current->right = MAX(current->right,new_box->right);
     current->top = MAX(current->top,new_box->top);
 }
-void merge_boxses(const char* input_file, const char* output_file, char_tree_t* char_info) {
+
+void merge_boxses(const char* input_file, const char* output_file) {
     printf("Reading box information from `%s'...\n",input_file);
     printf("Target box information file is `%s'...\n",output_file);
     FILE* f_input;
@@ -125,35 +116,24 @@ void merge_boxses(const char* input_file, const char* output_file, char_tree_t* 
         } else {
             /* Calculate char code */
             int len = strlen(box->utf8);
-            /* Move DFA */
             int code = codepoint(box->utf8,len);
             /* Fetch character class */
-            char_info_t* info = avl_find(char_info, code);
+            char_info_t* info = avl_find(global_char_info, code);
             int move;
             if(info) {
                 move = info->join_class;
             } else {
                 move = 2;
             }
+            /* Move DFA */
             current_state = dfa[current_state][move];
-            //switch(current_state) {
-            if(current_state==1) { /* Initial State */
-                expand_box(current_box,box,current_count);
-                current_count++;
-            }
-            if(current_state==2) { /* Final State */
-                expand_box(current_box,box,current_count);
-                fprintf(f_output,"%s %d %d %d %d %d\n",
-                        current_box->utf8,
-                        current_box->left,
-                        current_box->buttom,
-                        current_box->right,
-                        current_box->top,
-                        current_box->page);
-                current_count = 0;
-            }
-            if(current_state==3) { /* Unknown State */
-                if(current_count > 0) {
+            switch(current_state) {
+                case 1:  /* Initial State */
+                    expand_box(current_box,box,current_count);
+                    current_count++;
+                    break;
+                case 2: /* Final State */
+                    expand_box(current_box,box,current_count);
                     fprintf(f_output,"%s %d %d %d %d %d\n",
                             current_box->utf8,
                             current_box->left,
@@ -162,18 +142,31 @@ void merge_boxses(const char* input_file, const char* output_file, char_tree_t* 
                             current_box->top,
                             current_box->page);
                     current_count = 0;
-                }
-                fprintf(f_output,"%s %d %d %d %d %d\n",
-                        box->utf8,
-                        box->left,
-                        box->buttom,
-                        box->right,
-                        box->top,
-                        box->page);
+                    break;
+                case 3: /* Unknown State */
+                    if(current_count > 0) {
+                        fprintf(f_output,"%s %d %d %d %d %d\n",
+                                current_box->utf8,
+                                current_box->left,
+                                current_box->buttom,
+                                current_box->right,
+                                current_box->top,
+                                current_box->page);
+                        current_count = 0;
+                    }
+                    fprintf(f_output,"%s %d %d %d %d %d\n",
+                            box->utf8,
+                            box->left,
+                            box->buttom,
+                            box->right,
+                            box->top,
+                            box->page);
+                    break;
+                default:
+                    break;
             }
             fflush(f_output);
             total_boxes++;
-
         }
     }
     fclose(f_output);

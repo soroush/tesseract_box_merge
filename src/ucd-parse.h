@@ -20,9 +20,9 @@
 
 #include <stddef.h>
 #include "char-tree.h"
+#include "unicode-utils.h"
 
-int codepoint(const char* u, size_t l);
-char_tree_t* generate_ucd_data(const char* database);
+void generate_ucd_data(const char* database, int is_internal);
 
 #endif /* BOX_MERGE_UCD_PARSE */
 

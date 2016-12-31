@@ -13,5 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with boxmerge.  If not, see <http://www.gnu.org/licenses/>.
 
-SUBDIRS = src
-dist_doc_DATA = README
+SUBDIRS = src test
+AUTOMAKE_OPTIONS = subdir-objects
+
+dist_doc_DATA = README.md

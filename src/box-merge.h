@@ -21,6 +21,6 @@
 #include "box-parse.h"
 #include "ucd-parse.h"
 
-void merge_boxses(const char* input_file, const char* output_file, char_tree_t* char_info);
+void merge_boxses(const char* input_file, const char* output_file);
 
 #endif

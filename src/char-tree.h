@@ -20,10 +20,21 @@
 
 #include "common.h"
 
+struct char_info {
+    struct char_info* left;
+    struct char_info* right;
+    int code;       /* Code point of character */
+    int join_class; /* 0=Dual, 1=Right, 2=None */
+};
+typedef struct char_info char_info_t;
+
 struct char_tree {
     struct char_info* root;
 };
 typedef struct char_tree char_tree_t;
+static char_tree_t* global_char_info = NULL;
+
+void initialize_global_tree();
 
 /* Create a new AVL tree. */
 char_tree_t* avl_create_tree();
