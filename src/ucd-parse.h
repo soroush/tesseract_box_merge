@@ -22,7 +22,7 @@
 #include "char-tree.h"
 #include "unicode-utils.h"
 
-void generate_ucd_data(const char* database, int is_internal);
+void generate_ucd_data(const char* database);
 
 #endif /* BOX_MERGE_UCD_PARSE */
 

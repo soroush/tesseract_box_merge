@@ -15,7 +15,7 @@
 
 AUTOMAKE_OPTIONS = subdir-objects
 
-AM_CPPFLAGS = --pedantic -Wall -Wno-unknown-pragmas -Werror \
+AM_CPPFLAGS = --pedantic -Wall \
 	-I$(srcdir)/../src
 
 check_PROGRAMS = \
@@ -23,6 +23,8 @@ check_PROGRAMS = \
 
 strtok_l_SOURCES = \
 	strtok_l.c \
+        ../src/common.c \
+        ../src/ucd-parse.c \
 	../src/unicode-utils.c \
 	../src/char-tree.c
 

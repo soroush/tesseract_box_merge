@@ -20,6 +20,7 @@
 #include <unistd.h>
 #include <ctype.h>
 #include "unicode-utils.h"
+#include "ucd-parse.h"
 
 int main(int argc, char* argv[]) {
     char* s1     = "\xD9\x85\xD8\xAA\xD9\x86";   /* Matn */
@@ -34,10 +35,12 @@ int main(int argc, char* argv[]) {
     /* char* s4_l[] = {"\xD8\xB7", /\* Alef *\/ */
     /*                 "\xD8\xB7\xD9\x85\xDB\x8C\xD9\x86\xD8\xA7", /\* 'tmina *\/ */
     /*                 "\xD9\x86" /\* Etminan *\/ }; */
+    initialize_global_tree(1);
+    printf("%s\n","Starting...");
     char* l = strtok_l(s1);
     while(l){
-        printf("%s\n",l);
-        l = strtok_l(s1);
+        printf("%s %s\n\n\n",s1,l);
+        l = strtok_l(NULL);
     }
     exit(EXIT_SUCCESS);
 }

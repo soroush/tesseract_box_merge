@@ -117,13 +117,13 @@ PROGRAMS = $(bin_PROGRAMS)
 am_extract_ligatures_OBJECTS = common.$(OBJEXT) char-tree.$(OBJEXT) \
 	unicode-utils.$(OBJEXT) ucd-parse.$(OBJEXT) \
 	ligature-list.$(OBJEXT) ligature-extract.$(OBJEXT) \
-	embedded-ucd.$(OBJEXT) main-extract-ligatures.$(OBJEXT)
+	main-extract-ligatures.$(OBJEXT)
 extract_ligatures_OBJECTS = $(am_extract_ligatures_OBJECTS)
 extract_ligatures_LDADD = $(LDADD)
 am_merge_boxes_OBJECTS = common.$(OBJEXT) stack.$(OBJEXT) \
 	char-tree.$(OBJEXT) unicode-utils.$(OBJEXT) \
 	ucd-parse.$(OBJEXT) box-parse.$(OBJEXT) box-merge.$(OBJEXT) \
-	embedded-ucd.$(OBJEXT) main-merge-boxes.$(OBJEXT)
+	main-merge-boxes.$(OBJEXT)
 merge_boxes_OBJECTS = $(am_merge_boxes_OBJECTS)
 merge_boxes_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -284,7 +284,7 @@ merge_boxes_SOURCES = \
     box-parse.c \
     box-merge.h \
     box-merge.c \
-    embedded-ucd.c \
+    embedded-ucd.h \
     main-merge-boxes.c
 
 extract_ligatures_SOURCES = \
@@ -300,7 +300,6 @@ extract_ligatures_SOURCES = \
     ligature-list.c \
     ligature-extract.h \
     ligature-extract.c \
-    embedded-ucd.c \
     main-extract-ligatures.c
 
 all: all-am
@@ -397,7 +396,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/box-parse.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/char-tree.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/embedded-ucd.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ligature-extract.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ligature-list.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main-extract-ligatures.Po@am__quote@

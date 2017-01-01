@@ -34,7 +34,8 @@ int codepoint(const char* u, size_t l) {
     if(u0>=192 && u0<=223) {
         return (u0-192)*64 + (u1-128);
     }
-    if(u[0]==0xed && (u[1] & 0xa0) == 0xa0) { //code points, 0xd800 to 0xdfff
+    /* code points, 0xd800 to 0xdfff */
+    if(u[0]==0xed && (u[1] & 0xa0) == 0xa0) {
         return -1;
     }
     if(l<3) {
@@ -55,7 +56,6 @@ int codepoint(const char* u, size_t l) {
 }
 
 char* strtok_l(const char* src) {
-    generate_ucd_data();
     static char unichar[4]={'\0','\0','\0','\0'};
     static char* buffer = NULL;
     static char* oldsrc = NULL;
@@ -76,7 +76,7 @@ char* strtok_l(const char* src) {
             free(buffer);
         }
         len = strlen(src);
-        buffer = malloc(sizeof(char)*2*len);
+        buffer = malloc(sizeof(char)*2*len+1);
         oldsrc = strdup(src);
         current   = 0;
         start = 0;
@@ -86,7 +86,7 @@ char* strtok_l(const char* src) {
      * a ligature is found
      */
 
-    while(current_state==0 && current!=len) {
+    while(current_state<2 && current!=len) {
         /* A common case: character is in ASCII table */
         if((oldsrc[current]& 0x80)==0x00) {
             /* Since there is no single-byte unicode char that joins
@@ -118,7 +118,11 @@ char* strtok_l(const char* src) {
             }
             current_state = dfa[current_state][move];
             current += 2;
+            printf("%d",current_state);
         }
+    }
+    if(current==len){
+        return NULL;
     }
     buffer[current]='\0';
     return &(buffer[start]);

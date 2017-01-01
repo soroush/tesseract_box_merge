@@ -112,8 +112,9 @@ CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__dirstamp = $(am__leading_dot)dirstamp
-am_strtok_l_OBJECTS = strtok_l.$(OBJEXT) \
-	../src/unicode-utils.$(OBJEXT) ../src/char-tree.$(OBJEXT)
+am_strtok_l_OBJECTS = strtok_l.$(OBJEXT) ../src/common.$(OBJEXT) \
+	../src/ucd-parse.$(OBJEXT) ../src/unicode-utils.$(OBJEXT) \
+	../src/char-tree.$(OBJEXT)
 strtok_l_OBJECTS = $(am_strtok_l_OBJECTS)
 strtok_l_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -465,11 +466,13 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = subdir-objects
-AM_CPPFLAGS = --pedantic -Wall -Wno-unknown-pragmas -Werror \
+AM_CPPFLAGS = --pedantic -Wall \
 	-I$(srcdir)/../src
 
 strtok_l_SOURCES = \
 	strtok_l.c \
+        ../src/common.c \
+        ../src/ucd-parse.c \
 	../src/unicode-utils.c \
 	../src/char-tree.c
 
@@ -516,6 +519,10 @@ clean-checkPROGRAMS:
 ../src/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) ../src/$(DEPDIR)
 	@: > ../src/$(DEPDIR)/$(am__dirstamp)
+../src/common.$(OBJEXT): ../src/$(am__dirstamp) \
+	../src/$(DEPDIR)/$(am__dirstamp)
+../src/ucd-parse.$(OBJEXT): ../src/$(am__dirstamp) \
+	../src/$(DEPDIR)/$(am__dirstamp)
 ../src/unicode-utils.$(OBJEXT): ../src/$(am__dirstamp) \
 	../src/$(DEPDIR)/$(am__dirstamp)
 ../src/char-tree.$(OBJEXT): ../src/$(am__dirstamp) \
@@ -533,6 +540,8 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@../src/$(DEPDIR)/char-tree.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@../src/$(DEPDIR)/common.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@../src/$(DEPDIR)/ucd-parse.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@../src/$(DEPDIR)/unicode-utils.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strtok_l.Po@am__quote@
 

@@ -80,7 +80,7 @@ int main(int argc, char* argv[]) {
         print_usage();
         exit(EXIT_FAILURE);
     }
-    generate_ucd_data(ucd_database, 0);
+    generate_ucd_data(ucd_database);
     merge_boxses(input_box_file, output_box_file);
     exit(EXIT_SUCCESS);
 }

@@ -15,9 +15,12 @@
  * along with boxmerge.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "char-tree.h"
 #include <stddef.h>
 #include <memory.h>
+#include "char-tree.h"
+#include "ucd-parse.h"
+
+extern char_tree_t* global_char_info;
 
 char_tree_t* avl_create_tree() {
     char_tree_t* tree = NULL;
@@ -208,9 +211,12 @@ char_info_t* avl_find(char_tree_t* tree, int codepoint) {
     return current;
 }
 
-void initialize_global_tree() {
+void initialize_global_tree(int read_from_internal_data) {
     if(!global_char_info) {
         global_char_info = avl_create_tree();
+        if(read_from_internal_data==1){
+            generate_ucd_data(NULL);
+        }
     } else {
         /* TODO: Destroy previous tree, make a new one. */
     }

@@ -32,7 +32,7 @@ merge_boxes_SOURCES = \
     box-parse.c \
     box-merge.h \
     box-merge.c \
-    embedded-ucd.c \
+    embedded-ucd.h \
     main-merge-boxes.c
 
 extract_ligatures_SOURCES = \
@@ -48,5 +48,4 @@ extract_ligatures_SOURCES = \
     ligature-list.c \
     ligature-extract.h \
     ligature-extract.c \
-    embedded-ucd.c \
     main-extract-ligatures.c

@@ -32,9 +32,9 @@ struct char_tree {
     struct char_info* root;
 };
 typedef struct char_tree char_tree_t;
-static char_tree_t* global_char_info = NULL;
+char_tree_t* global_char_info;
 
-void initialize_global_tree();
+void initialize_global_tree(int read_from_internal_data);
 
 /* Create a new AVL tree. */
 char_tree_t* avl_create_tree();
