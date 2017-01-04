@@ -211,12 +211,9 @@ char_info_t* avl_find(char_tree_t* tree, int codepoint) {
     return current;
 }
 
-void initialize_global_tree(int read_from_internal_data) {
+void initialize_global_tree() {
     if(!global_char_info) {
         global_char_info = avl_create_tree();
-        if(read_from_internal_data==1){
-            generate_ucd_data(NULL);
-        }
     } else {
         /* TODO: Destroy previous tree, make a new one. */
     }

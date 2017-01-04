@@ -56,10 +56,11 @@ int codepoint(const char* u, size_t l) {
 }
 
 char* strtok_l(const char* src) {
-    static char unichar[4]={'\0','\0','\0','\0'};
+    static char unichar[4]= {'\0','\0','\0','\0'};
     static char* buffer = NULL;
     static char* oldsrc = NULL;
     static size_t current = 0;
+    static size_t src_current = 0;
     static size_t len = 0;
     int unicode = 0;
     size_t start = 0;
@@ -71,41 +72,44 @@ char* strtok_l(const char* src) {
             start = current;
         }
     } else {
-        if(oldsrc!=NULL){
+        if(oldsrc) {
             free(oldsrc);
+        }
+        if(buffer) {
             free(buffer);
         }
         len = strlen(src);
         buffer = malloc(sizeof(char)*2*len+1);
         oldsrc = strdup(src);
-        current   = 0;
+        src_current = 0;
+        current = 0;
         start = 0;
     }
     int current_state = 0;
     /* Read each byte from string untill either string ends, or
      * a ligature is found
      */
-
-    while(current_state<2 && current!=len) {
+    while(current_state<2 && src_current<len) {
         /* A common case: character is in ASCII table */
-        if((oldsrc[current]& 0x80)==0x00) {
+        if((oldsrc[src_current]& 0x80)==0x00) {
             /* Since there is no single-byte unicode char that joins
              * to other characters, there is no need to search the
              * avl tree. */
-            buffer[current] = oldsrc[current];
+            buffer[current] = oldsrc[src_current];
             buffer[current+1] = '\0';
             /* Jump over the trailing '\0' char. */
             current += 2;
+            src_current += 1;
         }
         /* Most common case: character is two-byte and probably is
          * in Arabic range. */
-        else if((oldsrc[current] & 0xE0)==0xC0) {
+        else if((oldsrc[src_current] & 0xE0)==0xC0) {
             /* Checking validity of second byte is skipped intentionally,
              * to increase performance. */
-            buffer[current] = oldsrc[current];
-            buffer[current+1] = oldsrc[current+1];
-            unichar[0] = oldsrc[current];
-            unichar[1] = oldsrc[current+1];
+            buffer[current] = oldsrc[src_current];
+            buffer[current+1] = oldsrc[src_current+1];
+            unichar[0] = oldsrc[src_current];
+            unichar[1] = oldsrc[src_current+1];
             unichar[3] = '\0';
             unicode = codepoint(unichar,2);
             char_info_t* info = avl_find(global_char_info,unicode);
@@ -118,61 +122,62 @@ char* strtok_l(const char* src) {
             }
             current_state = dfa[current_state][move];
             current += 2;
-            printf("%d",current_state);
+            src_current += 2;
         }
     }
-    if(current==len){
+    buffer[current]='\0';
+    current++;
+    if(src_current==len) {
         return NULL;
     }
-    buffer[current]='\0';
     return &(buffer[start]);
 }
 
-    //    char c0;
-    //    char c1;
-    //    char c2;
-    //    char c3;
-    //    if(c0==EOF) {
-    //        len = 0;
-    //        buf[0]='\0';
-    //    } else if((c0 & 0x80)==0x00) {
-    //        len=1;
-    //        buf[0]=c0;
-    //        buf[1]='\0';
-    //    } else if((c0 & 0xE0)==0xC0) {
-    //        c1 = fgetc(file);
-    //        if((c1 & 0xC0)==0x80) {
-    //            len=2;
-    //            buf[0]=c0;
-    //            buf[1]=c1;
-    //            buf[2]='\0';
-    //        } else {
-    //            /* ERROR */
-    //        }
-    //    } else if((c0 & 0xF0)==0xE0) {
-    //        c1 = fgetc(file);
-    //        c2 = fgetc(file);
-    //        if((c1 & 0xC0)==(c2 & 0xC0)==0x80) {
-    //            len=3;
-    //            buf[0]=c0;
-    //            buf[1]=c1;
-    //            buf[2]=c2;
-    //            buf[3]='\0';
-    //        } else {
-    //            /* ERROR */
-    //        }
-    //    } else if((c0 & 0xF8)==0xF0) {
-    //        c1 = fgetc(file);
-    //        c2 = fgetc(file);
-    //        c3 = fgetc(file);
-    //        if((c1 & 0xC0)==(c2 & 0xC0)==(c3 & 0xC0)==0x80) {
-    //            len=4;
-    //            buf[0]=c0;
-    //            buf[1]=c1;
-    //            buf[2]=c2;
-    //            buf[3]=c3;
-    //            buf[4]='\0';
-    //        } else {
-    //            /* ERROR */
-    //        }
-    //    }
+//    char c0;
+//    char c1;
+//    char c2;
+//    char c3;
+//    if(c0==EOF) {
+//        len = 0;
+//        buf[0]='\0';
+//    } else if((c0 & 0x80)==0x00) {
+//        len=1;
+//        buf[0]=c0;
+//        buf[1]='\0';
+//    } else if((c0 & 0xE0)==0xC0) {
+//        c1 = fgetc(file);
+//        if((c1 & 0xC0)==0x80) {
+//            len=2;
+//            buf[0]=c0;
+//            buf[1]=c1;
+//            buf[2]='\0';
+//        } else {
+//            /* ERROR */
+//        }
+//    } else if((c0 & 0xF0)==0xE0) {
+//        c1 = fgetc(file);
+//        c2 = fgetc(file);
+//        if((c1 & 0xC0)==(c2 & 0xC0)==0x80) {
+//            len=3;
+//            buf[0]=c0;
+//            buf[1]=c1;
+//            buf[2]=c2;
+//            buf[3]='\0';
+//        } else {
+//            /* ERROR */
+//        }
+//    } else if((c0 & 0xF8)==0xF0) {
+//        c1 = fgetc(file);
+//        c2 = fgetc(file);
+//        c3 = fgetc(file);
+//        if((c1 & 0xC0)==(c2 & 0xC0)==(c3 & 0xC0)==0x80) {
+//            len=4;
+//            buf[0]=c0;
+//            buf[1]=c1;
+//            buf[2]=c2;
+//            buf[3]=c3;
+//            buf[4]='\0';
+//        } else {
+//            /* ERROR */
+//        }
+//    }

@@ -22,10 +22,9 @@ check_PROGRAMS = \
 	strtok_l
 
 strtok_l_SOURCES = \
-	strtok_l.c \
-        ../src/common.c \
-        ../src/ucd-parse.c \
-	../src/unicode-utils.c \
-	../src/char-tree.c
+	strtok_l.c
+
+strtok_l_LDADD = \
+	$(srcdir)/../src/libtesseract_utils.la
 
 TESTS = $(check_PROGRAMS)

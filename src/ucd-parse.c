@@ -16,13 +16,10 @@
  */
 
 #include "ucd-parse.h"
+#include "embedded-ucd.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include "embedded-ucd.h"
 #include <string.h>
-
-//extern unsigned char* __src_ArabicShaping_txt;
-//extern unsigned int __src_ArabicShaping_txt_len ;
 
 char_info_t* parse_line(char* input) {
     char_info_t* info = malloc(sizeof(char_info_t));
@@ -57,17 +54,17 @@ char_info_t* parse_line(char* input) {
     return info;
 }
 
-
 void generate_ucd_data(const char* database) {
-    printf("Reading character join classes from `%s'...\n",database);
     FILE* fp;
     char* line = NULL;
     size_t len = 0;
     ssize_t read;
+    initialize_global_tree();
     if(database){
+        printf("Reading character join classes from `%s'...\n",database);
         fp = fopen(database, "r");
     }else {
-        initialize_global_tree(1);
+        printf("%s","Reading character join classes from internal UCD (version 9.0.0)...\n");
         fp = fmemopen(__src_ArabicShaping_txt,__src_ArabicShaping_txt_len,"r");
     }
     if(fp == NULL) {

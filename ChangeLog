@@ -1,3 +1,9 @@
+2017-01-04  Soroush Rabiei  <soroush@ametisco.ir>
+
+	* all: Internal UCD bugfixes
+	* embedded-ucd.h: Adding extern definitions of internal UCD
+	* ucd-parse.h: Fix generate_char_info
+
 2016-12-29  Soroush Rabiei  <soroush@ametisco.ir>
 
 	* all_files: Initial version 0.1.0

@@ -15,12 +15,10 @@
  * along with boxmerge.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <ctype.h>
-#include "unicode-utils.h"
+#ifndef EMBEDDED_UCD_H
+#define EMBEDDED_UCD_H
 
-int main(int argc, char* argv[]) {
-    exit(EXIT_SUCCESS);
-}
+extern unsigned char __src_ArabicShaping_txt[];
+extern unsigned int __src_ArabicShaping_txt_len;
+
+#endif

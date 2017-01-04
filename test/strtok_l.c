@@ -21,27 +21,42 @@
 #include <ctype.h>
 #include "unicode-utils.h"
 #include "ucd-parse.h"
+#include "embedded-ucd.h"
+#include <assert.h>
 
 int main(int argc, char* argv[]) {
     char* s1     = "\xD9\x85\xD8\xAA\xD9\x86";   /* Matn */
-    /* char* s1_t[] = {"\xD9\x85\xD8\xAA\xD9\x86"}; /\* Matn *\/ */
-    /* char* s2   = "\xD8\xB3\xD9\x84\xD8\xA7\xD9\x85"; /\* Salam *\/ */
-    /* char* s2_l[] = {"\xD8\xB3\xD9\x84\xD8\xA7",      /\* Sala *\/ */
-    /*                 "\xD9\x85"                       /\* Mim *\/ */
-    /*                }; */
-    /* char* s3     = "\xD9\x85\xD9\x86\xD8\xAD\xD9\x86\xDB\x8C"; /\* Monhani *\/ */
-    /* char* s3_l[] = {"\xD9\x85\xD9\x86\xD8\xAD\xD9\x86\xDB\x8C"}; /\* Monhani *\/ */
-    /* char* s4     = "\xD8\xA7\xD8\xB7\xD9\x85\xDB\x8C\xD9\x86\xD8\xA7\xD9\x86"; /\* Etminan *\/ */
-    /* char* s4_l[] = {"\xD8\xB7", /\* Alef *\/ */
-    /*                 "\xD8\xB7\xD9\x85\xDB\x8C\xD9\x86\xD8\xA7", /\* 'tmina *\/ */
-    /*                 "\xD9\x86" /\* Etminan *\/ }; */
-    initialize_global_tree(1);
-    printf("%s\n","Starting...");
+    char* s1_l[] = {"\xD9\x85\xD8\xAA\xD9\x86"}; /* Matn */
+    char* s2   = "\xD8\xB3\xD9\x84\xD8\xA7\xD9\x85"; /* Salam */
+    char* s2_l[] = {"\xD8\xB3\xD9\x84\xD8\xA7",      /* Sala */
+                    "\xD9\x85"                       /* Mim */
+                   };
+    char* s3     = "\xD9\x85\xD9\x86\xD8\xAD\xD9\x86\xDB\x8C"; /* Monhani */
+    char* s3_l[] = {"\xD9\x85\xD9\x86\xD8\xAD\xD9\x86\xDB\x8C"}; /* Monhani */
+    char* s4     = "\xD8\xA7\xD8\xB7\xD9\x85\xDB\x8C\xD9\x86\xD8\xA7\xD9\x86"; /* Etminan */
+    char* s4_l[] = {"\xD8\xB7", /* Alef */
+                    "\xD8\xB7\xD9\x85\xDB\x8C\xD9\x86\xD8\xA7", /* 'tmina */
+                    "\xD9\x86" /* Etminan */
+                   };
+    generate_ucd_data(NULL);
     char* l = strtok_l(s1);
-    while(l){
-        printf("%s %s\n\n\n",s1,l);
+    int index = 0;
+    while(l) {
+        printf("%s %s\n",s1,l);
+        assert(strcmp(s1_l[index],l)==0);
         l = strtok_l(NULL);
+        index++;
+    }
+    index=0;
+    l = strtok_l(s2);
+    while(l) {
+        printf("%s--%s\n",s2,l);
+        assert(strcmp(s2_l[index],l)==0);
+        l = strtok_l(NULL);
+        index++;
     }
     exit(EXIT_SUCCESS);
 }
+
+
 

@@ -13,11 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with boxmerge.  If not, see <http://www.gnu.org/licenses/>.
 
-bin_PROGRAMS = \
-    merge_boxes \
-    extract_ligatures
+noinst_LTLIBRARIES = \
+    libtesseract_utils.la
 
-merge_boxes_SOURCES = \
+libtesseract_utils_la_SOURCES = \
     common.h \
     common.c \
     stack.h \
@@ -33,19 +32,20 @@ merge_boxes_SOURCES = \
     box-merge.h \
     box-merge.c \
     embedded-ucd.h \
+    embedded-ucd.c
+
+bin_PROGRAMS = \
+    merge_boxes \
+    extract_ligatures
+
+merge_boxes_SOURCES = \
     main-merge-boxes.c
 
+merge_boxes_LDADD = \
+    libtesseract_utils.la
+
 extract_ligatures_SOURCES = \
-    common.h \
-    common.c \
-    char-tree.h \
-    char-tree.c \
-    unicode-utils.h \
-    unicode-utils.c \
-    ucd-parse.h \
-    ucd-parse.c \
-    ligature-list.h \
-    ligature-list.c \
-    ligature-extract.h \
-    ligature-extract.c \
     main-extract-ligatures.c
+
+extract_ligatures_LDADD = \
+    libtesseract_utils.la

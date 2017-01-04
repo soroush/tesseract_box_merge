@@ -34,7 +34,7 @@ struct char_tree {
 typedef struct char_tree char_tree_t;
 char_tree_t* global_char_info;
 
-void initialize_global_tree(int read_from_internal_data);
+void initialize_global_tree();
 
 /* Create a new AVL tree. */
 char_tree_t* avl_create_tree();

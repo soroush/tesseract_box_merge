@@ -13,7 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with boxmerge.  If not, see <http://www.gnu.org/licenses/>.
 
-SUBDIRS = src test
+ACLOCAL_AMFLAGS = -I m4
+
+SUBDIRS = src test .
+
 AUTOMAKE_OPTIONS = subdir-objects
 
 dist_doc_DATA = README.md
