@@ -17,6 +17,7 @@
 
 #include <stddef.h>
 #include <memory.h>
+#include <stdlib.h>
 #include "char-tree.h"
 #include "ucd-parse.h"
 
