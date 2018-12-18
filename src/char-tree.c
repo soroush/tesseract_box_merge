@@ -18,6 +18,7 @@
 #include "char-tree.h"
 #include <stddef.h>
 #include <memory.h>
+#include <stdlib.h>
 
 char_tree_t* avl_create_tree() {
     char_tree_t* tree = NULL;
